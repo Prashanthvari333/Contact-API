@@ -46,6 +46,7 @@ def spam_report_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 @api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
 def mark_as_spam(request):
     phone_number = request.data.get('phone_number')
     description = request.data.get('description', '')

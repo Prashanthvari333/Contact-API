@@ -3,9 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from .models import User
 from .serializers import UserSerializer
+from apps.contacts.serializers import ContactSerializer
 from django.http import HttpResponse
 from django.contrib.auth import login
 from apps.users.models import User
+from apps.contacts.models import Contact
 from .PhoneNumberBackend import PhoneNumberBackend
 from django.views.decorators.csrf import csrf_exempt
 
@@ -44,6 +46,14 @@ def user_detail(request, pk):
     elif request.method == 'DELETE':
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+ 
+@api_view(["POST"]) 
+@permission_classes([permissions.IsAuthenticated])  
+def get_contacts_by_user(request):
+    user = User.objects.get(phone_number = request.data.get('phone_number'))
+    user_contacts = Contact.objects.filter(user_id = user.id)
+    return Response(ContactSerializer(user_contacts,many=True).data)
+    
     
 @csrf_exempt
 @api_view(['POST'])
@@ -54,6 +64,8 @@ def register(request):
     phone_number = data.get('phone_number')
     password = data.get('password')
     email = data.get('email')
+    
+    print(data)
 
     if not username or not phone_number or not password:
         return Response({'error': 'Username, phone number, and password are required.'}, status=status.HTTP_400_BAD_REQUEST)

@@ -8,4 +8,5 @@ urlpatterns = [
     path('login', views.signin, name='signin'),
     path('users/', views.user_list, name='user-list'),
     path('users/<int:pk>/', views.user_detail, name='user-detail'),
+    path('user_contacts', views.get_contacts_by_user, name="get-contacts-by-user")
 ]
