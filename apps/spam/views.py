@@ -7,24 +7,19 @@ from .serializers import SpamReportSerializer
 # Create your views here.
 
 
-@api_view(['GET', 'POST'])
+# to fetch all the spam contacts
+@api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
-def spam_report_list(request):
-    if request.method == 'GET':
-        spam_reports = SpamReport.objects.all()
-        serializer = SpamReportSerializer(spam_reports, many=True)
-        return Response(serializer.data)
+def get_spam_report_list(request):
+    spam_reports = SpamReport.objects.all()
+    serializer = SpamReportSerializer(spam_reports, many=True)
+    return Response(serializer.data)
 
-    elif request.method == 'POST':
-        serializer = SpamReportSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(reported_by=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([permissions.IsAuthenticated])
-def spam_report_detail(request, pk):
+def get_spam_report_detail(request, pk):
     try:
         spam_report = SpamReport.objects.get(pk=pk)
     except SpamReport.DoesNotExist:
@@ -44,7 +39,9 @@ def spam_report_detail(request, pk):
     elif request.method == 'DELETE':
         spam_report.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+ 
+ 
+# to mark a contact as a spam report   
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def mark_as_spam(request):

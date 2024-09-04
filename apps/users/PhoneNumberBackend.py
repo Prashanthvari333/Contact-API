@@ -1,5 +1,5 @@
 from django.contrib.auth.backends import ModelBackend
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model,login
 from apps.users.models import User
 
 class PhoneNumberBackend(ModelBackend):
@@ -11,6 +11,7 @@ class PhoneNumberBackend(ModelBackend):
             return None
 
         if user.validate_password(password):
+            login(request, user)
             return user
         return None
 

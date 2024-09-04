@@ -28,39 +28,39 @@ def add_contact(request):
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
-def contact_list(request):
+def get_contact_list(request):
     if request.method == 'GET':
         contacts = Contact.objects.filter(user=request.user)
         serializer = ContactSerializer(contacts, many=True)
         return Response(serializer.data)
 
-
+# to perform all the operations on contact
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([permissions.IsAuthenticated])
-def contact_detail(request, pk):
+def contact_details(request, pk):
     try:
         contact = Contact.objects.get(pk=pk, user=request.user)
     except Contact.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-
+    
     if request.method == 'GET':
         serializer = ContactSerializer(contact)
         return Response(serializer.data)
-
+    
     elif request.method == 'PUT':
         serializer = ContactSerializer(contact, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
     elif request.method == 'DELETE':
         contact.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
-def search_contacts(request):
+def get_search_contacts(request):
     query = request.query_params.get('q', '')
     search_type = request.query_params.get('type', 'name')
 
@@ -76,7 +76,6 @@ def search_contacts(request):
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
 def get_details_by_number(request,phone_number,id):
-    print("User details :", request.user)
     is_registerd = False
     if User.objects.filter(phone_number=phone_number).exists():
         is_registerd = True
