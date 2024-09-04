@@ -31,8 +31,8 @@ This project is a REST API built using Django for a mobile app that allows users
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/phone-number-lookup-api.git
-    cd phone-number-lookup-api
+    git clone [https://github.com/yourusername/phone-number-lookup-api.git](https://github.com/Prashanthvari333/Contact-API.git)
+    cd Contact-API
     ```
 
 2. **Create a virtual environment**:
